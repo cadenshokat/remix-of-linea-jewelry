@@ -1,22 +1,25 @@
 import Header from "../components/header/Header";
 import Footer from "../components/footer/Footer";
-import LargeHero from "../components/content/LargeHero";
-import FiftyFiftySection from "../components/content/FiftyFiftySection";
-import OneThirdTwoThirdsSection from "../components/content/OneThirdTwoThirdsSection";
-import ProductCarousel from "../components/content/ProductCarousel";
-import EditorialSection from "../components/content/EditorialSection";
+import HeroSection from "../components/home/HeroSection";
+import CategoryShowcase from "../components/home/CategoryShowcase";
+import { ProductGrid } from "../components/products/ProductGrid";
+import FeaturesSection from "../components/home/FeaturesSection";
+import WellnessSection from "../components/home/WellnessSection";
 
 const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
       
-      <main className="pt-6">
-        <FiftyFiftySection />
-        <ProductCarousel />
-        <LargeHero />
-        <OneThirdTwoThirdsSection />
-        <EditorialSection />
+      <main>
+        <HeroSection />
+        <CategoryShowcase />
+        <ProductGrid 
+          title="Shop Our Collection"
+          description="Premium saunas and steam rooms designed for your home wellness sanctuary"
+        />
+        <FeaturesSection />
+        <WellnessSection />
       </main>
       
       <Footer />

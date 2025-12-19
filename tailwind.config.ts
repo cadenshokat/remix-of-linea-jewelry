@@ -14,7 +14,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['DM Sans', 'sans-serif'],
+        serif: ['Cormorant Garamond', 'Georgia', 'serif'],
+        sans: ['Inter', 'system-ui', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -51,7 +52,6 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        /* Linea specific colors */
         "status-bar": {
           DEFAULT: "hsl(var(--status-bar))",
           foreground: "hsl(var(--status-bar-foreground))",
@@ -60,6 +60,11 @@ export default {
           DEFAULT: "hsl(var(--nav-background))",
           foreground: "hsl(var(--nav-foreground))",
           hover: "hsl(var(--nav-hover))",
+        },
+        wood: {
+          light: "hsl(var(--wood-light))",
+          medium: "hsl(var(--wood-medium))",
+          dark: "hsl(var(--wood-dark))",
         },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
@@ -79,44 +84,28 @@ export default {
       },
       keyframes: {
         "accordion-down": {
-          from: {
-            height: "0",
-          },
-          to: {
-            height: "var(--radix-accordion-content-height)",
-          },
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
         },
         "accordion-up": {
-          from: {
-            height: "var(--radix-accordion-content-height)",
-          },
-          to: {
-            height: "0",
-          },
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
         },
         "slide-in": {
-          from: {
-            transform: "translateX(-100%)",
-          },
-          to: {
-            transform: "translateX(0)",
-          },
+          from: { transform: "translateX(-100%)" },
+          to: { transform: "translateX(0)" },
         },
         "slide-in-right": {
-          from: {
-            transform: "translateX(100%)",
-          },
-          to: {
-            transform: "translateX(0)",
-          },
+          from: { transform: "translateX(100%)" },
+          to: { transform: "translateX(0)" },
         },
         "fade-in": {
-          from: {
-            opacity: "0",
-          },
-          to: {
-            opacity: "1",
-          },
+          from: { opacity: "0" },
+          to: { opacity: "1" },
+        },
+        "fade-in-up": {
+          from: { opacity: "0", transform: "translateY(20px)" },
+          to: { opacity: "1", transform: "translateY(0)" },
         },
       },
       animation: {
@@ -125,6 +114,7 @@ export default {
         "slide-in": "slide-in 0.3s ease-out",
         "slide-in-right": "slide-in-right 0.3s ease-out",
         "fade-in": "fade-in 0.2s ease-out",
+        "fade-in-up": "fade-in-up 0.5s ease-out",
       },
       transitionTimingFunction: {
         "smooth": "cubic-bezier(0.4, 0, 0.2, 1)",
