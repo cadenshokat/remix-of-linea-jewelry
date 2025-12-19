@@ -1,30 +1,32 @@
+import { Link } from "react-router-dom";
+
 const Footer = () => {
   return (
-    <footer className="w-full bg-white text-black pt-8 pb-2 px-6 border-t border-[#e5e5e5] mt-48">
-      <div className="">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-8">
+    <footer className="w-full bg-accent text-accent-foreground pt-16 pb-4 px-6 mt-24">
+      <div className="max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-12">
           {/* Brand - Left side */}
           <div>
-            <img 
-              src="/Linea_Jewelry_Inc-2.svg" 
-              alt="Linea Jewelry Inc." 
-              className="mb-4 h-6 w-auto"
-            />
-            <p className="text-sm font-light text-black/70 leading-relaxed max-w-md mb-6">
-              Minimalist jewelry crafted for the modern individual
+            <Link to="/" className="block mb-6">
+              <span className="font-serif text-3xl font-medium tracking-tight">
+                SAUNA
+              </span>
+            </Link>
+            <p className="text-sm font-sans text-accent-foreground/80 leading-relaxed max-w-md mb-8">
+              Premium saunas, steam rooms, and wellness products crafted for the modern home. Experience the art of relaxation.
             </p>
             
             {/* Contact Information */}
-            <div className="space-y-2 text-sm font-light text-black/70">
+            <div className="space-y-4 text-sm font-sans text-accent-foreground/80">
               <div>
-                <p className="font-normal text-black mb-1">Visit Us</p>
-                <p>123 Madison Avenue</p>
-                <p>New York, NY 10016</p>
+                <p className="font-medium text-accent-foreground mb-1">Showroom</p>
+                <p>123 Wellness Boulevard</p>
+                <p>Los Angeles, CA 90210</p>
               </div>
               <div>
-                <p className="font-normal text-black mb-1 mt-3">Contact</p>
-                <p>+1 (212) 555-0123</p>
-                <p>hello@lineajewelry.com</p>
+                <p className="font-medium text-accent-foreground mb-1 mt-4">Contact</p>
+                <p>1-800-SAUNA-CO</p>
+                <p>hello@sauna.com</p>
               </div>
             </div>
           </div>
@@ -33,54 +35,54 @@ const Footer = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Shop */}
             <div>
-              <h4 className="text-sm font-normal mb-4">Shop</h4>
-              <ul className="space-y-2">
-                <li><a href="#" className="text-sm font-light text-black/70 hover:text-black transition-colors">New In</a></li>
-                <li><a href="#" className="text-sm font-light text-black/70 hover:text-black transition-colors">Rings</a></li>
-                <li><a href="#" className="text-sm font-light text-black/70 hover:text-black transition-colors">Earrings</a></li>
-                <li><a href="#" className="text-sm font-light text-black/70 hover:text-black transition-colors">Bracelets</a></li>
-                <li><a href="#" className="text-sm font-light text-black/70 hover:text-black transition-colors">Necklaces</a></li>
+              <h4 className="text-sm font-sans font-medium mb-4 uppercase tracking-wide">Shop</h4>
+              <ul className="space-y-3">
+                <li><Link to="/category/indoor-saunas" className="text-sm font-sans text-accent-foreground/80 hover:text-accent-foreground transition-colors">Indoor Saunas</Link></li>
+                <li><Link to="/category/outdoor-saunas" className="text-sm font-sans text-accent-foreground/80 hover:text-accent-foreground transition-colors">Outdoor Saunas</Link></li>
+                <li><Link to="/category/steam-rooms" className="text-sm font-sans text-accent-foreground/80 hover:text-accent-foreground transition-colors">Steam Rooms</Link></li>
+                <li><Link to="/category/infrared-saunas" className="text-sm font-sans text-accent-foreground/80 hover:text-accent-foreground transition-colors">Infrared Saunas</Link></li>
+                <li><Link to="/category/accessories" className="text-sm font-sans text-accent-foreground/80 hover:text-accent-foreground transition-colors">Accessories</Link></li>
               </ul>
             </div>
 
             {/* Support */}
             <div>
-              <h4 className="text-sm font-normal mb-4">Support</h4>
-              <ul className="space-y-2">
-                <li><a href="#" className="text-sm font-light text-black/70 hover:text-black transition-colors">Size Guide</a></li>
-                <li><a href="#" className="text-sm font-light text-black/70 hover:text-black transition-colors">Care Instructions</a></li>
-                <li><a href="#" className="text-sm font-light text-black/70 hover:text-black transition-colors">Returns</a></li>
-                <li><a href="#" className="text-sm font-light text-black/70 hover:text-black transition-colors">Shipping</a></li>
-                <li><a href="#" className="text-sm font-light text-black/70 hover:text-black transition-colors">Contact</a></li>
+              <h4 className="text-sm font-sans font-medium mb-4 uppercase tracking-wide">Support</h4>
+              <ul className="space-y-3">
+                <li><Link to="/about/installation-guide" className="text-sm font-sans text-accent-foreground/80 hover:text-accent-foreground transition-colors">Installation Guide</Link></li>
+                <li><Link to="/about/size-guide" className="text-sm font-sans text-accent-foreground/80 hover:text-accent-foreground transition-colors">Size Guide</Link></li>
+                <li><Link to="/about/customer-care" className="text-sm font-sans text-accent-foreground/80 hover:text-accent-foreground transition-colors">Customer Care</Link></li>
+                <li><Link to="/about/store-locator" className="text-sm font-sans text-accent-foreground/80 hover:text-accent-foreground transition-colors">Showrooms</Link></li>
               </ul>
             </div>
 
-            {/* Connect */}
+            {/* Company */}
             <div>
-              <h4 className="text-sm font-normal mb-4">Connect</h4>
-              <ul className="space-y-2">
-                <li><a href="#" className="text-sm font-light text-black/70 hover:text-black transition-colors">Instagram</a></li>
-                <li><a href="#" className="text-sm font-light text-black/70 hover:text-black transition-colors">Pinterest</a></li>
-                <li><a href="#" className="text-sm font-light text-black/70 hover:text-black transition-colors">Newsletter</a></li>
+              <h4 className="text-sm font-sans font-medium mb-4 uppercase tracking-wide">Company</h4>
+              <ul className="space-y-3">
+                <li><Link to="/about/our-story" className="text-sm font-sans text-accent-foreground/80 hover:text-accent-foreground transition-colors">Our Story</Link></li>
+                <li><Link to="/about/sustainability" className="text-sm font-sans text-accent-foreground/80 hover:text-accent-foreground transition-colors">Sustainability</Link></li>
+                <li><a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-sm font-sans text-accent-foreground/80 hover:text-accent-foreground transition-colors">Instagram</a></li>
+                <li><a href="https://pinterest.com" target="_blank" rel="noopener noreferrer" className="text-sm font-sans text-accent-foreground/80 hover:text-accent-foreground transition-colors">Pinterest</a></li>
               </ul>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Bottom section - edge to edge separator */}
-      <div className="border-t border-[#e5e5e5] -mx-6 px-6 pt-2">
-        <div className="flex flex-col md:flex-row justify-between items-center">
-          <p className="text-sm font-light text-black mb-1 md:mb-0">
-            © 2024 Linea. All rights reserved.
+      {/* Bottom section */}
+      <div className="border-t border-accent-foreground/20 pt-4 max-w-7xl mx-auto">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-sm font-sans text-accent-foreground/70">
+            © 2024 Sauna.com. All rights reserved.
           </p>
           <div className="flex space-x-6">
-            <a href="/privacy-policy" className="text-sm font-light text-black hover:text-black/70 transition-colors">
+            <Link to="/privacy-policy" className="text-sm font-sans text-accent-foreground/70 hover:text-accent-foreground transition-colors">
               Privacy Policy
-            </a>
-            <a href="/terms-of-service" className="text-sm font-light text-black hover:text-black/70 transition-colors">
+            </Link>
+            <Link to="/terms-of-service" className="text-sm font-sans text-accent-foreground/70 hover:text-accent-foreground transition-colors">
               Terms of Service
-            </a>
+            </Link>
           </div>
         </div>
       </div>
