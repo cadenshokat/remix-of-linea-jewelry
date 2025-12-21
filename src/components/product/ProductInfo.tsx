@@ -10,12 +10,43 @@ import {
   BreadcrumbSeparator 
 } from "@/components/ui/breadcrumb";
 import { Minus, Plus } from "lucide-react";
+import { useCartStore } from "@/stores/cartStore";
+import { ShopifyProduct } from "@/lib/shopify";
+import { toast } from "sonner";
 
-const ProductInfo = () => {
+interface ProductInfoProps {
+  product: ShopifyProduct;
+}
+
+const ProductInfo = ({ product }: ProductInfoProps) => {
   const [quantity, setQuantity] = useState(1);
+  const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
+  const addItem = useCartStore((state) => state.addItem);
 
   const incrementQuantity = () => setQuantity(prev => prev + 1);
   const decrementQuantity = () => setQuantity(prev => Math.max(1, prev - 1));
+
+  const selectedVariant = product.node.variants.edges[selectedVariantIndex]?.node;
+  const price = selectedVariant?.price || product.node.priceRange.minVariantPrice;
+  const productType = product.node.productType || 'Sauna';
+
+  const handleAddToCart = () => {
+    if (!selectedVariant) return;
+
+    addItem({
+      product,
+      variantId: selectedVariant.id,
+      variantTitle: selectedVariant.title,
+      price: selectedVariant.price,
+      quantity,
+      selectedOptions: selectedVariant.selectedOptions || [],
+    });
+
+    toast.success("Added to cart", {
+      description: `${quantity}x ${product.node.title}`,
+      position: "top-center",
+    });
+  };
 
   return (
     <div className="space-y-6">
@@ -31,12 +62,12 @@ const ProductInfo = () => {
             <BreadcrumbSeparator />
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <Link to="/category/earrings">Earrings</Link>
+                <Link to="/category/shop">Shop</Link>
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage>Pantheon</BreadcrumbPage>
+              <BreadcrumbPage>{product.node.title}</BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
@@ -46,37 +77,44 @@ const ProductInfo = () => {
       <div className="space-y-2">
         <div className="flex justify-between items-start">
           <div>
-            <p className="text-sm font-light text-muted-foreground mb-1">Earrings</p>
-            <h1 className="text-2xl md:text-3xl font-light text-foreground">Pantheon</h1>
+            <p className="text-sm font-light text-muted-foreground mb-1">{productType}</p>
+            <h1 className="text-2xl md:text-3xl font-light text-foreground">{product.node.title}</h1>
           </div>
           <div className="text-right">
-            <p className="text-xl font-light text-foreground">€2,850</p>
+            <p className="text-xl font-light text-foreground">
+              ${parseFloat(price.amount).toLocaleString()}
+            </p>
           </div>
         </div>
       </div>
 
-      {/* Product details */}
-      <div className="space-y-4 py-4 border-b border-border">
-        <div className="space-y-2">
-          <h3 className="text-sm font-light text-foreground">Material</h3>
-          <p className="text-sm font-light text-muted-foreground">18k Gold Plated Sterling Silver</p>
+      {/* Variant selection */}
+      {product.node.variants.edges.length > 1 && (
+        <div className="space-y-4 py-4 border-b border-border">
+          <h3 className="text-sm font-light text-foreground">Options</h3>
+          <div className="flex flex-wrap gap-2">
+            {product.node.variants.edges.map((variant, index) => (
+              <Button
+                key={variant.node.id}
+                variant={selectedVariantIndex === index ? "default" : "outline"}
+                size="sm"
+                onClick={() => setSelectedVariantIndex(index)}
+                className="rounded-none"
+              >
+                {variant.node.title}
+              </Button>
+            ))}
+          </div>
         </div>
-        
-        <div className="space-y-2">
-          <h3 className="text-sm font-light text-foreground">Dimensions</h3>
-          <p className="text-sm font-light text-muted-foreground">2.5cm x 1.2cm</p>
+      )}
+
+      {/* Product description */}
+      {product.node.description && (
+        <div className="space-y-2 py-4 border-b border-border">
+          <h3 className="text-sm font-light text-foreground">Description</h3>
+          <p className="text-sm font-light text-muted-foreground">{product.node.description}</p>
         </div>
-        
-        <div className="space-y-2">
-          <h3 className="text-sm font-light text-foreground">Weight</h3>
-          <p className="text-sm font-light text-muted-foreground">4.2g per earring</p>
-        </div>
-        
-        <div className="space-y-2">
-          <h3 className="text-sm font-light text-foreground">Editor's notes</h3>
-          <p className="text-sm font-light text-muted-foreground italic">"A modern interpretation of classical architecture, these earrings bridge timeless elegance with contemporary minimalism."</p>
-        </div>
-      </div>
+      )}
 
       {/* Quantity and Add to Cart */}
       <div className="space-y-4">
@@ -106,9 +144,11 @@ const ProductInfo = () => {
         </div>
 
         <Button 
+          onClick={handleAddToCart}
+          disabled={!selectedVariant?.availableForSale}
           className="w-full h-12 bg-foreground text-background hover:bg-foreground/90 font-light rounded-none"
         >
-          Add to Bag
+          {selectedVariant?.availableForSale ? 'Add to Bag' : 'Out of Stock'}
         </Button>
       </div>
     </div>

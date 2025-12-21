@@ -1,25 +1,23 @@
 import { useState, useRef } from "react";
 import ImageZoom from "./ImageZoom";
-import pantheonImage from "@/assets/pantheon.jpg";
-import eclipseImage from "@/assets/eclipse.jpg";
-import haloImage from "@/assets/halo.jpg";
-import organicEarring from "@/assets/organic-earring.png";
-import linkBracelet from "@/assets/link-bracelet.png";
 
-const productImages = [
-  pantheonImage,
-  organicEarring,
-  eclipseImage,
-  linkBracelet,
-  haloImage,
-];
+interface ProductImage {
+  url: string;
+  altText: string | null;
+}
 
-const ProductImageGallery = () => {
+interface ProductImageGalleryProps {
+  images: ProductImage[];
+}
+
+const ProductImageGallery = ({ images }: ProductImageGalleryProps) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isZoomOpen, setIsZoomOpen] = useState(false);
   const [zoomInitialIndex, setZoomInitialIndex] = useState(0);
   const touchStartX = useRef<number | null>(null);
   const touchEndX = useRef<number | null>(null);
+
+  const productImages = images.length > 0 ? images.map(img => img.url) : ['/placeholder.svg'];
 
   const nextImage = () => {
     setCurrentImageIndex((prev) => (prev + 1) % productImages.length);
@@ -50,10 +48,8 @@ const ProductImageGallery = () => {
 
     if (Math.abs(difference) > minSwipeDistance) {
       if (difference > 0) {
-        // Swipe left - next image
         nextImage();
       } else {
-        // Swipe right - previous image
         prevImage();
       }
     }
@@ -75,7 +71,7 @@ const ProductImageGallery = () => {
             >
               <img
                 src={image}
-                alt={`Product view ${index + 1}`}
+                alt={images[index]?.altText || `Product view ${index + 1}`}
                 className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
               />
             </div>
@@ -95,23 +91,25 @@ const ProductImageGallery = () => {
           >
             <img
               src={productImages[currentImageIndex]}
-              alt={`Product view ${currentImageIndex + 1}`}
+              alt={images[currentImageIndex]?.altText || `Product view ${currentImageIndex + 1}`}
               className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 select-none"
             />
           </div>
           
           {/* Dots indicator */}
-          <div className="flex justify-center mt-4 gap-2">
-            {productImages.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentImageIndex(index)}
-                className={`w-2 h-2 rounded-full transition-colors ${
-                  index === currentImageIndex ? 'bg-foreground' : 'bg-muted'
-                }`}
-              />
-            ))}
-          </div>
+          {productImages.length > 1 && (
+            <div className="flex justify-center mt-4 gap-2">
+              {productImages.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentImageIndex(index)}
+                  className={`w-2 h-2 rounded-full transition-colors ${
+                    index === currentImageIndex ? 'bg-foreground' : 'bg-muted'
+                  }`}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
