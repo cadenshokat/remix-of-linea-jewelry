@@ -13,6 +13,7 @@ export interface ShopifyProduct {
     title: string;
     description: string;
     handle: string;
+    productType: string;
     priceRange: {
       minVariantPrice: {
         amount: string;
@@ -95,6 +96,7 @@ const STOREFRONT_PRODUCTS_QUERY = `
           title
           description
           handle
+          productType
           priceRange {
             minVariantPrice {
               amount
@@ -143,6 +145,7 @@ const STOREFRONT_PRODUCT_BY_HANDLE_QUERY = `
       title
       description
       handle
+      productType
       priceRange {
         minVariantPrice {
           amount
@@ -238,11 +241,12 @@ export async function fetchProducts(first: number = 20, query?: string): Promise
   }
 }
 
-export async function fetchProductByHandle(handle: string): Promise<ShopifyProduct['node'] | null> {
+export async function fetchProductByHandle(handle: string): Promise<ShopifyProduct | null> {
   try {
     const data = await storefrontApiRequest(STOREFRONT_PRODUCT_BY_HANDLE_QUERY, { handle });
-    if (!data) return null;
-    return data.data.productByHandle;
+    if (!data || !data.data.productByHandle) return null;
+    // Wrap in node structure to match ShopifyProduct type
+    return { node: data.data.productByHandle };
   } catch (error) {
     console.error('Error fetching product:', error);
     return null;

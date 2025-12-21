@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -28,9 +27,9 @@ interface FilterSortBarProps {
 const FilterSortBar = ({ filtersOpen, setFiltersOpen, itemCount }: FilterSortBarProps) => {
   const [sortBy, setSortBy] = useState("featured");
 
-  const categories = ["Earrings", "Bracelets", "Rings", "Necklaces"];
-  const priceRanges = ["Under €1,000", "€1,000 - €2,000", "€2,000 - €3,000", "Over €3,000"];
-  const materials = ["Gold", "Silver", "Rose Gold", "Platinum"];
+  const categories = ["Indoor Saunas", "Outdoor Saunas", "Steam Rooms", "Infrared Saunas", "Sauna Heaters", "Accessories"];
+  const priceRanges = ["Under $2,000", "$2,000 - $5,000", "$5,000 - $10,000", "Over $10,000"];
+  const materials = ["Cedar", "Hemlock", "Pine", "Thermo-treated Wood"];
 
   return (
     <>
