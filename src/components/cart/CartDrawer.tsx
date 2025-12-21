@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect} from "react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -11,6 +11,7 @@ import {
 import { ShoppingBag, Minus, Plus, Trash2, ExternalLink, Loader2 } from "lucide-react";
 import { useCartStore } from "@/stores/cartStore";
 import { formatPrice } from "@/lib/shopify";
+import { track } from "@/lib/analytics";
 
 export const CartDrawer = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -27,25 +28,67 @@ export const CartDrawer = () => {
   const totalItems = getTotalItems();
   const totalPrice = getTotalPrice();
 
+  useEffect(() => {
+    track("Cart Drawer Toggled", {
+      is_open: isOpen,
+      cart_item_count: totalItems,
+      cart_value: totalPrice,
+      currency: items?.[0]?.price?.currencyCode || "USD",
+    });
+  }, [isOpen]);
+
+  const cartSummary = () => ({
+    cart_item_count: totalItems,
+    cart_value: totalPrice,
+    currency: items?.[0]?.price?.currencyCode || "USD",
+    items: items.map((i) => ({
+      product_id: i.product.node.id,
+      handle: i.product.node.handle,
+      title: i.product.node.title,
+      variant_id: i.variantId,
+      variant_title: i.variantTitle,
+      price: parseFloat(i.price.amount),
+      currency: i.price.currencyCode,
+      quantity: i.quantity,
+      selected_options: (i.selectedOptions || []).map(o => ({ name: o.name, value: o.value })),
+    })),
+  });
+
   const handleCheckout = async () => {
     try {
+      track("Checkout Started", { source: "CartDrawer", ...cartSummary() });
+
       await createCheckout();
       const checkoutUrl = useCartStore.getState().checkoutUrl;
+
       if (checkoutUrl) {
-        window.open(checkoutUrl, '_blank');
+        track("Checkout Opened", {
+          source: "CartDrawer",
+          checkout_url: checkoutUrl,
+          ...cartSummary(),
+        });
+
+        window.open(checkoutUrl, "_blank");
         setIsOpen(false);
+      } else {
+        track("Checkout Failed", { reason: "missing_checkout_url", ...cartSummary() });
       }
     } catch (error) {
-      console.error('Checkout failed:', error);
+      console.error("Checkout failed:", error);
+      track("Checkout Failed", {
+        reason: (error as any)?.message || String(error),
+        ...cartSummary(),
+      });
     }
   };
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
-        <button 
+        <button
           className="p-2 text-nav-foreground hover:text-nav-hover transition-colors duration-200 relative"
           aria-label="Shopping cart"
+          onClick={() => track("Cart Icon Clicked", { cart_item_count: totalItems })}
         >
           <ShoppingBag className="w-5 h-5" />
           {totalItems > 0 && (
@@ -103,11 +146,21 @@ export const CartDrawer = () => {
                       </div>
                       
                       <div className="flex flex-col items-end gap-2 flex-shrink-0">
-                        <Button
+                      <Button
                           variant="ghost"
                           size="icon"
                           className="h-7 w-7"
-                          onClick={() => removeItem(item.variantId)}
+                          onClick={() => {
+                            track("Remove From Cart", {
+                              product_id: item.product.node.id,
+                              handle: item.product.node.handle,
+                              title: item.product.node.title,
+                              variant_id: item.variantId,
+                              quantity: item.quantity,
+                              ...cartSummary(),
+                            });
+                            removeItem(item.variantId);
+                          }}
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>
@@ -117,7 +170,17 @@ export const CartDrawer = () => {
                             variant="outline"
                             size="icon"
                             className="h-7 w-7"
-                            onClick={() => updateQuantity(item.variantId, item.quantity - 1)}
+                            onClick={() => {
+                              const newQty = item.quantity - 1;
+                              track("Cart Quantity Changed", {
+                                product_id: item.product.node.id,
+                                variant_id: item.variantId,
+                                from: item.quantity,
+                                to: newQty,
+                                ...cartSummary(),
+                              });
+                              updateQuantity(item.variantId, newQty);
+                            }}
                           >
                             <Minus className="h-3 w-3" />
                           </Button>
@@ -126,7 +189,17 @@ export const CartDrawer = () => {
                             variant="outline"
                             size="icon"
                             className="h-7 w-7"
-                            onClick={() => updateQuantity(item.variantId, item.quantity + 1)}
+                            onClick={() => {
+                              const newQty = item.quantity + 1;
+                              track("Cart Quantity Changed", {
+                                product_id: item.product.node.id,
+                                variant_id: item.variantId,
+                                from: item.quantity,
+                                to: newQty,
+                                ...cartSummary(),
+                              });
+                              updateQuantity(item.variantId, newQty);
+                            }}
                           >
                             <Plus className="h-3 w-3" />
                           </Button>

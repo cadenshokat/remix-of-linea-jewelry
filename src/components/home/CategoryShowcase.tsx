@@ -10,13 +10,15 @@ const CategoryShowcase = () => {
       title: "Outdoor Saunas",
       description: "Experience nature's embrace with our handcrafted outdoor barrel and cabin saunas",
       image: outdoorSauna,
-      link: "/category/outdoor-saunas"
+      link: "/category/outdoor-saunas",
+      category_key: "outdoor-saunas",
     },
     {
       title: "Steam Rooms",
       description: "Modern steam rooms designed for ultimate relaxation and rejuvenation",
       image: steamRoom,
-      link: "/category/steam-rooms"
+      link: "/category/steam-rooms",
+      category_key: "steam-rooms",
     }
   ];
 
@@ -38,11 +40,12 @@ const CategoryShowcase = () => {
               onClick={() =>
                 track("Category Clicked", {
                   category: category.title,
-                  category_key: category.description,
+                  category_key: category.category_key,
+                  destination: category.link,
                   position: index + 1,
                   source: "CategoryShowcase",
                 })
-              }
+              }              
               className="group relative aspect-[4/3] overflow-hidden rounded-lg"
             >
               <img 

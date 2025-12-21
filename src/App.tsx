@@ -16,8 +16,38 @@ import CustomerCare from "./pages/about/CustomerCare";
 import StoreLocator from "./pages/about/StoreLocator";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
+import { useEffect, useRef } from "react";
+import { useLocation } from "react-router-dom";
+import { page, track } from "@/lib/analytics";
 
 const queryClient = new QueryClient();
+
+const RouteAnalytics = () => {
+  const location = useLocation();
+  const lastKey = useRef<string>("");
+
+  useEffect(() => {
+    // HashRouter changes are still represented in location
+    const key = `${location.pathname}${location.search}${location.hash}`;
+    if (key === lastKey.current) return;
+    lastKey.current = key;
+
+    page({
+      name: location.pathname === "/" ? "Home" : location.pathname,
+      route_path: location.pathname,
+      route_search: location.search,
+      route_hash: location.hash,
+    });
+
+    track("Page Viewed", {
+      route_path: location.pathname,
+      route_search: location.search,
+      route_hash: location.hash,
+    });
+  }, [location]);
+
+  return null;
+};
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -26,6 +56,7 @@ const App = () => (
       <Sonner />
       <HashRouter>
         <ScrollToTop />
+        <RouteAnalytics />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/category/:category" element={<Category />} />

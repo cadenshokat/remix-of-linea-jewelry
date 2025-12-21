@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -17,6 +17,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import { track } from "@/lib/analytics";
 
 interface FilterSortBarProps {
   filtersOpen: boolean;
@@ -26,10 +27,39 @@ interface FilterSortBarProps {
 
 const FilterSortBar = ({ filtersOpen, setFiltersOpen, itemCount }: FilterSortBarProps) => {
   const [sortBy, setSortBy] = useState("featured");
+  const lastOpen = useRef<boolean>(filtersOpen);
 
   const categories = ["Indoor Saunas", "Outdoor Saunas", "Steam Rooms", "Infrared Saunas", "Sauna Heaters", "Accessories"];
   const priceRanges = ["Under $2,000", "$2,000 - $5,000", "$5,000 - $10,000", "Over $10,000"];
   const materials = ["Cedar", "Hemlock", "Pine", "Thermo-treated Wood"];
+
+  useEffect(() => {
+    if (lastOpen.current === filtersOpen) return;
+    lastOpen.current = filtersOpen;
+
+    track("Filters Panel Toggled", {
+      is_open: filtersOpen,
+      item_count: itemCount,
+    });
+  }, [filtersOpen, itemCount]);
+
+  const onSortChange = (value: string) => {
+    track("Sort Changed", {
+      from: sortBy,
+      to: value,
+      item_count: itemCount,
+    });
+    setSortBy(value);
+  };
+
+  const onFilterClick = (filter_group: string, filter_value: string, checked: any) => {
+    track("Filter Toggled", {
+      filter_group,
+      filter_value,
+      checked: !!checked,
+      item_count: itemCount,
+    });
+  };
 
   return (
     <>

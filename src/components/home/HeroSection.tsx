@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import saunaHero from "@/assets/sauna-hero.jpg";
+import { track } from "@/lib/analytics";
 
 const HeroSection = () => {
   return (
@@ -28,13 +29,31 @@ const HeroSection = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
               <Button asChild size="lg" className="font-sans">
-                <Link to="/category/shop">
+              <Link
+                  to="/category/shop"
+                  onClick={() =>
+                    track("CTA Clicked", {
+                      location: "Hero",
+                      cta_text: "Shop Collection",
+                      destination: "/category/shop",
+                    })
+                  }
+                >
                   Shop Collection
                   <ArrowRight className="ml-2 w-4 h-4" />
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg" className="font-sans bg-background/10 border-background/30 text-background hover:bg-background/20">
-                <Link to="/about/our-story">
+              <Link
+                  to="/about/our-story"
+                  onClick={() =>
+                    track("CTA Clicked", {
+                      location: "Hero",
+                      cta_text: "Our Story",
+                      destination: "/about/our-story",
+                    })
+                  }
+                >
                   Our Story
                 </Link>
               </Button>
