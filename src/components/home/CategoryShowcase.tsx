@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import outdoorSauna from "@/assets/outdoor-sauna.jpg";
 import steamRoom from "@/assets/steam-room.jpg";
+import { track } from "@/lib/analytics";
 
 const CategoryShowcase = () => {
   const categories = [
@@ -31,9 +32,17 @@ const CategoryShowcase = () => {
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {categories.map((category, index) => (
-            <Link 
+            <Link
               key={index}
               to={category.link}
+              onClick={() =>
+                track("Category Clicked", {
+                  category: category.title,
+                  category_key: category.description,
+                  position: index + 1,
+                  source: "CategoryShowcase",
+                })
+              }
               className="group relative aspect-[4/3] overflow-hidden rounded-lg"
             >
               <img 
