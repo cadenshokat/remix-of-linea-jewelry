@@ -22,32 +22,30 @@ import { page, track } from "@/lib/analytics";
 
 const queryClient = new QueryClient();
 
-const RouteAnalytics = () => {
+function RouteAnalytics() {
   const location = useLocation();
-  const lastKey = useRef<string>("");
 
   useEffect(() => {
-    // HashRouter changes are still represented in location
-    const key = `${location.pathname}${location.search}${location.hash}`;
-    if (key === lastKey.current) return;
-    lastKey.current = key;
+    const path = location.pathname;
+    const name =
+      path === "/" ? "Home" :
+      path.startsWith("/category/") ? "Category" :
+      path.startsWith("/product/") ? "Product Detail" :
+      path === "/checkout" ? "Checkout" :
+      path.startsWith("/about/") ? "About" :
+      path === "/privacy-policy" ? "Privacy Policy" :
+      path === "/terms-of-service" ? "Terms of Service" :
+      "Other";
 
-    page({
-      name: location.pathname === "/" ? "Home" : location.pathname,
-      route_path: location.pathname,
-      route_search: location.search,
-      route_hash: location.hash,
+    page(name, {
+      route: path,
+      search: location.search,
+      hash: location.hash,
     });
-
-    track("Page Viewed", {
-      route_path: location.pathname,
-      route_search: location.search,
-      route_hash: location.hash,
-    });
-  }, [location]);
+  }, [location.pathname, location.search, location.hash]);
 
   return null;
-};
+}
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
